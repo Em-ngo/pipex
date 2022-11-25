@@ -1,25 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: engo <engo@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/23 10:48:59 by engo              #+#    #+#             */
-/*   Updated: 2022/11/25 13:12:27 by engo             ###   ########.fr       */
+/*   Created: 2021/05/26 11:23:58 by engo              #+#    #+#             */
+/*   Updated: 2021/05/26 11:46:19 by engo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include "libft.h"
 
-# include <unistd.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <sys/types.h>
-# include <sys/wait.h>
-# include "libft.h"
-# include <sys/stat.h>
-# include <fcntl.h>
+int	ft_atoi(const char *str)
+{
+	int	sign;
+	int	nb;
 
-#endif
+	sign = 1;
+	while (*str == ' ' || (*str >= 9 && *str <= 13))
+		str++;
+	if (*str == '+' || *str == '-')
+	{
+		if (*str == '-')
+			sign *= -1;
+		str++;
+	}
+	nb = 0;
+	while (*str >= '0' && *str <= '9')
+	{
+		nb = nb * 10 + *str - 48;
+		str++;
+	}
+	return (nb * sign);
+}

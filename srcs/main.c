@@ -6,32 +6,65 @@
 /*   By: engo <engo@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 12:36:14 by engo              #+#    #+#             */
-/*   Updated: 2022/11/24 15:11:39 by engo             ###   ########.fr       */
+/*   Updated: 2022/11/25 13:17:06 by engo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/pipex.h"
+#include "pipex.h"
 
-void	main(int ac, char **av)
+int	ft_path_cmd(char **path)
 {
-	int		fd[2];
-	pid_t	id;
+	int	i;
 
-	if (pipe(fd) == -1)
+	i = 0;
+	while (path[i] && ft_strncmp(path[i], "PATH=", 5))
+		i++;
+	return (i);
+}
+
+void	child(int pipe, char **av, char **envp)
+{
+	int		*fd;
+	char	*cmd;
+	char	*path;
+	char	**exect;
+
+	fd = open(av[1], O_RDONLY);
+	if (fd < 0)
 	{
-		perror("pipe");
+		perror("An error has occured.\n");
 		exit(EXIT_FAILURE);
 	}
-	id = fork();
-	if (id == -1)
+	path = ft_path_cmd(envp);
+
+}
+
+
+int	main(int ac, char **av, char **envp)
+{
+	pid_t	id;
+	int		fd[2];
+
+	if (ac > 5)
+		perror("Error, too many arguments.\n");
+	if (ac < 5)
+		perror("Error, missing arguments.\n");
+	if (ac == 5)
 	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
+		if (pipe(fd) == -1)
+		{
+			perror("An error has occured.\n");
+			exit(EXIT_FAILURE);
+		}
+		id = fork();
+		if (id == -1)
+		{
+			perror("An error has occured.\n");
+			exit(EXIT_FAILURE);
+		}
+		if (id == 0)
+			ft_child(id, av, envp);
+		ft_parent(id, av, envp);
 	}
-	if (id == 0)
-	{
-		close (fd[1]);
-		dup2(fd[1], stdout);
-	}
-	waitpid();
+	return (0);
 }

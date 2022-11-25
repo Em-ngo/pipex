@@ -1,25 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: engo <engo@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/23 10:48:59 by engo              #+#    #+#             */
-/*   Updated: 2022/11/25 13:12:27 by engo             ###   ########.fr       */
+/*   Created: 2021/06/06 14:20:31 by engo              #+#    #+#             */
+/*   Updated: 2021/06/06 14:20:32 by engo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include "libft.h"
 
-# include <unistd.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <sys/types.h>
-# include <sys/wait.h>
-# include "libft.h"
-# include <sys/stat.h>
-# include <fcntl.h>
+int	ft_memcmp(const void *s1, const void *s2, size_t n)
+{
+	unsigned char	*s1_tmp;
+	unsigned char	*s2_tmp;
+	size_t			i;
 
-#endif
+	s1_tmp = (unsigned char *)s1;
+	s2_tmp = (unsigned char *)s2;
+	i = 0;
+	while (i < n)
+	{
+		if (s1_tmp[i] != s2_tmp[i])
+			return (s1_tmp[i] - s2_tmp[i]);
+		i++;
+	}
+	return (0);
+}

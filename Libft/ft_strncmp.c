@@ -1,25 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: engo <engo@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/23 10:48:59 by engo              #+#    #+#             */
-/*   Updated: 2022/11/25 13:12:27 by engo             ###   ########.fr       */
+/*   Created: 2021/05/26 11:27:40 by engo              #+#    #+#             */
+/*   Updated: 2021/05/27 16:33:40 by engo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include "libft.h"
 
-# include <unistd.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <sys/types.h>
-# include <sys/wait.h>
-# include "libft.h"
-# include <sys/stat.h>
-# include <fcntl.h>
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
+{
+	size_t	i;
 
-#endif
+	i = 0;
+	while (((unsigned char)s1[i] == (unsigned char)s2[i]) && (i < n)
+		&& ((unsigned char)s1[i] != '\0') && ((unsigned char)s2[i] != '\0'))
+	{
+		i++;
+	}
+	if (i == n)
+		return (0);
+	else
+		return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+}

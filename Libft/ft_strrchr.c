@@ -1,25 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: engo <engo@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/23 10:48:59 by engo              #+#    #+#             */
-/*   Updated: 2022/11/25 13:12:27 by engo             ###   ########.fr       */
+/*   Created: 2021/06/06 14:24:30 by engo              #+#    #+#             */
+/*   Updated: 2021/06/06 14:24:39 by engo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include "libft.h"
 
-# include <unistd.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <sys/types.h>
-# include <sys/wait.h>
-# include "libft.h"
-# include <sys/stat.h>
-# include <fcntl.h>
+char	*ft_strrchr(const char *s, int c)
+{
+	char	c_tmp;
+	int		len;
 
-#endif
+	len = ft_strlen(s);
+	c_tmp = (const char)c;
+	while (len)
+	{
+		if (s[len] == c_tmp)
+			return ((char *)&s[len]);
+		len--;
+	}
+	if (s[0] == c_tmp)
+		return ((char *)&s[len]);
+	return (NULL);
+}

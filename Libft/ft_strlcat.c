@@ -1,25 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: engo <engo@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/23 10:48:59 by engo              #+#    #+#             */
-/*   Updated: 2022/11/25 13:12:27 by engo             ###   ########.fr       */
+/*   Created: 2021/06/06 14:23:25 by engo              #+#    #+#             */
+/*   Updated: 2021/06/06 14:23:27 by engo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include "libft.h"
 
-# include <unistd.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <sys/types.h>
-# include <sys/wait.h>
-# include "libft.h"
-# include <sys/stat.h>
-# include <fcntl.h>
+size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
+{
+	size_t	i;
+	size_t	j;
+	size_t	tmp;
 
-#endif
+	j = 0;
+	i = ft_strlen(dst);
+	tmp = ft_strlen(src);
+	if (dstsize <= i)
+		tmp = dstsize + tmp;
+	else
+		tmp = i + tmp;
+	while (src[j] && i + 1 < dstsize)
+	{
+		dst[i] = src[j];
+		i++;
+		j++;
+	}
+	if (i < dstsize)
+		dst[i] = '\0';
+	return (tmp);
+}

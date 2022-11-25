@@ -1,13 +1,14 @@
 CC = gcc
 
-CFLAGS = -D -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 
 NAME =	pipex
 
 DIR_INC = -I ./includes/
 
-SRCS =	srcs/main.c \
+DIR_INC += -I ./Libft/
 
+SRCS =	main.c \
 
 SRCS_DIR = ./srcs
 
@@ -22,7 +23,8 @@ DEPS = $(OBJS:.o=.d)
 all:	${NAME}
 
 ${NAME}: ${OBJS}
-		${CC} $(DIR_INC) ${OBJS} -o ${NAME} -L
+		make -C ./Libft/
+		${CC} $(DIR_INC) ${OBJS} -o ${NAME} -L ./Libft/ -lft
 
 $(DIR_OBJ)/%.o: $(SRCS_DIR)/%.c
 	mkdir -p $(dir $@)
@@ -30,9 +32,10 @@ $(DIR_OBJ)/%.o: $(SRCS_DIR)/%.c
 
 clean:
 		rm -rf ${DIR_OBJ}
-
+		make -C ./Libft/ clean
 fclean: clean
 		rm -f ${NAME}
+		make -C ./Libft/ fclean
 
 re: fclean all
 
