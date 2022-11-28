@@ -22,12 +22,33 @@ int	ft_path_cmd(char **path)
 	return (i);
 }
 
-void	child(int pipe, char **av, char **envp)
+char	*find_cmd(char *path_cmd, char **exec)
+{
+	int		i;
+	char	**list_path;
+	char	*good_path;
+	char	*full_path;
+
+	i = 0;
+	list_path = ft_split(path_cmd, ':');
+	if (exec[0] == NULL)
+	{
+		perror("Command not found.\n");
+		ft_free(list_path);
+		ft_free(exec);
+		exit(EXIT_FAILURE);
+	}
+	if (access(exec[0], F_OK) == 0)
+
+
+}
+
+void	ft_child(int pipe, char **av, char **envp)
 {
 	int		*fd;
+	char	**exec;
 	char	*cmd;
 	char	*path;
-	char	**exect;
 
 	fd = open(av[1], O_RDONLY);
 	if (fd < 0)
@@ -36,6 +57,9 @@ void	child(int pipe, char **av, char **envp)
 		exit(EXIT_FAILURE);
 	}
 	path = ft_path_cmd(envp);
+	exec = ft_split(av[2], ' ');
+	cmd = find_cmd(path, exec);
+
 
 }
 
