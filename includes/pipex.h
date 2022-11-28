@@ -22,4 +22,9 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 
+void    check_exec(char **exec, char **list_path);
+void    ft_free_pipex(char **str);
+void    ft_execve(char **exec, char *cmd, char **evnp);
+void    error_exit(char *str);
+
 #endif

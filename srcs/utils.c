@@ -18,7 +18,7 @@ void	error_exit(char *str)
 	exit(EXIT_FAILURE);
 }
 
-void	ft_free(char **str)
+void	ft_free_pipex(char **str)
 {
 	int		i;
 
@@ -33,15 +33,26 @@ void	ft_free(char **str)
 	*str = NULL;
 }
 
+void	ft_execve(char **exec, char *cmd, char **envp)
+{
+	if (execve(cmd, exec, envp) == -1)
+	{
+		perror("Error, command not found.\n");
+		ft_putstr_fd(exec[0], 2);
+		ft_free_pipex(exec);
+		exit(EXIT_FAILURE);
+	}
+	else
+		return;
+}
+
 void	check_exec(char **exec, char **list_path)
 {
 	if (exec[0] == NULL)
 	{
 		perror("Command not found.\n");
-		ft_free(list_path);
-		ft_free(exec);
+		ft_free_pipex(list_path);
+		ft_free_pipex(exec);
 		exit(EXIT_FAILURE);
 	}
 }
-
-void	

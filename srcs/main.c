@@ -12,14 +12,14 @@
 
 #include "pipex.h"
 
-int	ft_path_cmd(char **path)
+char	*ft_path_cmd(char **path)
 {
 	int	i;
 
 	i = 0;
 	while (path[i] && ft_strncmp(path[i], "PATH=", 5))
 		i++;
-	return (i);
+	return (path[i] + 5);
 }
 
 char	*find_cmd(char *path_cmd, char **exec)
@@ -47,7 +47,7 @@ char	*find_cmd(char *path_cmd, char **exec)
 		free(full_path);
 		i++;
 	}
-	ft_free(list_path);
+	ft_free_pipex(list_path);
 	return ("<");
 }
 
@@ -70,6 +70,7 @@ void	ft_parent(int *pipe, char **av, char **envp)
 	dup2(pipe[0], 0);
 	dup2(fd, 1);
 	close(pipe[1]);
+	ft_execve(exec, cmd, envp);
 }
 
 void	ft_child(int *pipe, char **av, char **envp)
@@ -91,6 +92,7 @@ void	ft_child(int *pipe, char **av, char **envp)
 	dup2(pipe[1], 1);
 	dup2(fd, 0);
 	close(pipe[0]);
+	ft_execve(exec, cmd, envp);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -110,8 +112,8 @@ int	main(int ac, char **av, char **envp)
 		if (id == -1)
 			error_exit("Error, fork failed.\n");
 		if (id == 0)
-			ft_child(id, av, envp);
-		ft_parent(id, av, envp);
+			ft_child(fd, av, envp);
+		ft_parent(fd, av, envp);
 	}
 	return (0);
 }

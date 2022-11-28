@@ -9,6 +9,7 @@ DIR_INC = -I ./includes/
 DIR_INC += -I ./Libft/
 
 SRCS =	main.c \
+		utils.c \
 
 SRCS_DIR = ./srcs
 
