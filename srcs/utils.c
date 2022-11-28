@@ -12,6 +12,12 @@
 
 #include "pipex.h"
 
+void	error_exit(char *str)
+{
+	perror(str);
+	exit(EXIT_FAILURE);
+}
+
 void	ft_free(char **str)
 {
 	int		i;
@@ -26,3 +32,16 @@ void	ft_free(char **str)
 	free(str);
 	*str = NULL;
 }
+
+void	check_exec(char **exec, char **list_path)
+{
+	if (exec[0] == NULL)
+	{
+		perror("Command not found.\n");
+		ft_free(list_path);
+		ft_free(exec);
+		exit(EXIT_FAILURE);
+	}
+}
+
+void	

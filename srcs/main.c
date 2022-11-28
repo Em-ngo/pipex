@@ -28,24 +28,53 @@ char	*find_cmd(char *path_cmd, char **exec)
 	char	**list_path;
 	char	*good_path;
 	char	*full_path;
+	char	*tmp;
 
 	i = 0;
 	list_path = ft_split(path_cmd, ':');
-	if (exec[0] == NULL)
-	{
-		perror("Command not found.\n");
-		ft_free(list_path);
-		ft_free(exec);
-		exit(EXIT_FAILURE);
-	}
+	check_exec(exec, list_path);
 	if (access(exec[0], F_OK) == 0)
-
-
+		return (exec[0]);
+	while (list_path[i])
+	{
+		good_path = ft_strjoin(list_path[i], "/");
+		tmp = ft_strdup(good_path);
+		full_path = ft_strjoin(tmp, exec[0]);
+		free(good_path);
+		free(tmp);
+		if (access(full_path, F_OK) == 0)
+			return (full_path);
+		free(full_path);
+		i++;
+	}
+	ft_free(list_path);
+	return ("<");
 }
 
-void	ft_child(int pipe, char **av, char **envp)
+void	ft_parent(int *pipe, char **av, char **envp)
 {
-	int		*fd;
+	int		fd;
+	char	**exec;
+	char	*cmd;
+	char	*path;
+
+	fd = open(av[4], O_CREAT | O_WRONLY | O_TRUNC, 0666); 
+	if (fd < 0)
+	{
+		perror("An error has occured.\n");
+		exit(EXIT_FAILURE);
+	}
+	path = ft_path_cmd(envp);
+	exec = ft_split(av[3], ' ');
+	cmd = find_cmd(path, exec);
+	dup2(pipe[0], 0);
+	dup2(fd, 1);
+	close(pipe[1]);
+}
+
+void	ft_child(int *pipe, char **av, char **envp)
+{
+	int		fd;
 	char	**exec;
 	char	*cmd;
 	char	*path;
@@ -59,10 +88,10 @@ void	ft_child(int pipe, char **av, char **envp)
 	path = ft_path_cmd(envp);
 	exec = ft_split(av[2], ' ');
 	cmd = find_cmd(path, exec);
-
-
+	dup2(pipe[1], 1);
+	dup2(fd, 0);
+	close(pipe[0]);
 }
-
 
 int	main(int ac, char **av, char **envp)
 {
@@ -70,22 +99,16 @@ int	main(int ac, char **av, char **envp)
 	int		fd[2];
 
 	if (ac > 5)
-		perror("Error, too many arguments.\n");
+		error_exit("Error, too many arguments.\n");
 	if (ac < 5)
-		perror("Error, missing arguments.\n");
+		error_exit("Error, missing arguments.\n");
 	if (ac == 5)
 	{
 		if (pipe(fd) == -1)
-		{
-			perror("An error has occured.\n");
-			exit(EXIT_FAILURE);
-		}
+			error_exit("Error, pipe failed.\n");
 		id = fork();
 		if (id == -1)
-		{
-			perror("An error has occured.\n");
-			exit(EXIT_FAILURE);
-		}
+			error_exit("Error, fork failed.\n");
 		if (id == 0)
 			ft_child(id, av, envp);
 		ft_parent(id, av, envp);
