@@ -6,7 +6,7 @@
 /*   By: engo <engo@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 12:36:14 by engo              #+#    #+#             */
-/*   Updated: 2022/11/25 13:17:06 by engo             ###   ########.fr       */
+/*   Updated: 2022/12/05 19:11:45 by engo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,14 @@ char	*find_cmd(char *path_cmd, char **exec)
 	return ("");
 }
 
-void	ft_parent(int *pipe, char **av, char **envp)
+void	ft_parent(int *pipefd, char **av, char **envp)
 {
 	int		fd;
 	char	**exec;
 	char	*cmd;
 	char	*path;
 
-	fd = open(av[4], O_CREAT | O_WRONLY | O_TRUNC, 0666); 
+	fd = open(av[4], O_CREAT | O_WRONLY | O_TRUNC, 0666);
 	if (fd < 0)
 	{
 		perror("An error has occured.\n");
@@ -68,14 +68,14 @@ void	ft_parent(int *pipe, char **av, char **envp)
 	exec = ft_split(av[3], ' ');
 	cmd = find_cmd(path, exec);
 	dup2(fd, 1);
-	close(pipe[1]);
-	dup2(pipe[0], 0);
+	close(pipefd[1]);
+	dup2(pipefd[0], 0);
 	if (fd == 1)
 		exit(1);
 	ft_execve(exec, cmd, envp);
 }
 
-void	ft_child(int *pipe, char **av, char **envp)
+void	ft_child(int *pipefd, char **av, char **envp)
 {
 	int		fd;
 	char	**exec;
@@ -92,8 +92,8 @@ void	ft_child(int *pipe, char **av, char **envp)
 	exec = ft_split(av[2], ' ');
 	cmd = find_cmd(path, exec);
 	dup2(fd, 0);
-	close(pipe[0]);
-	dup2(pipe[1], 1);
+	close(pipefd[0]);
+	dup2(pipefd[1], 1);
 	if (fd == 0)
 		exit(1);
 	ft_execve(exec, cmd, envp);
@@ -102,6 +102,7 @@ void	ft_child(int *pipe, char **av, char **envp)
 int	main(int ac, char **av, char **envp)
 {
 	pid_t	id;
+	pid_t	id2;
 	int		fd[2];
 
 	if (ac == 5)
@@ -113,8 +114,14 @@ int	main(int ac, char **av, char **envp)
 			error_exit("Error, fork failed.\n");
 		if (id == 0)
 			ft_child(fd, av, envp);
+		id2 = fork();
+		if (id2 == -1)
+			error_exit("Error, fork failed.\n");
+		if (id2 == 0)
+			ft_parent(fd, av, envp);
+		close_fd(fd);
 		waitpid(id, NULL, 0);
-		ft_parent(fd, av, envp);
+		waitpid(id2, NULL, 0);
 	}
 	else
 		error_exit("Error arguments.\n");
