@@ -4,12 +4,15 @@ CFLAGS = -Wall -Wextra -Werror
 
 NAME =	pipex
 
+NAME_LIBFT = libft.a
+
 DIR_INC = -I ./includes/
 
 DIR_INC += -I ./Libft/
 
-SRCS =	main.c \
-		utils.c \
+SRCS =		utils.c \
+			main.c \
+		
 
 SRCS_DIR = ./srcs
 
@@ -29,15 +32,14 @@ ${NAME}: ${OBJS}
 
 $(DIR_OBJ)/%.o: $(SRCS_DIR)/%.c
 	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(DIR_INC) -c -o $@ $< -MMD -g
+	$(CC) $(CFLAGS) $(DIR_INC) -o $@ -c $< -MMD
 
 clean:
 		rm -rf ${DIR_OBJ}
 		make -C ./Libft/ clean
+
 fclean: clean
 		rm -f ${NAME}
-		make -C ./Libft/ fclean
 
 re: fclean all
-
 .PHONY:	all clean fclean re

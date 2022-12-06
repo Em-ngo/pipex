@@ -48,7 +48,7 @@ char	*find_cmd(char *path_cmd, char **exec)
 		i++;
 	}
 	ft_free_pipex(list_path);
-	return ("<");
+	return ("");
 }
 
 void	ft_parent(int *pipe, char **av, char **envp)
@@ -67,9 +67,11 @@ void	ft_parent(int *pipe, char **av, char **envp)
 	path = ft_path_cmd(envp);
 	exec = ft_split(av[3], ' ');
 	cmd = find_cmd(path, exec);
-	dup2(pipe[0], 0);
 	dup2(fd, 1);
 	close(pipe[1]);
+	dup2(pipe[0], 0);
+	if (fd == 1)
+		exit(1);
 	ft_execve(exec, cmd, envp);
 }
 
@@ -89,9 +91,11 @@ void	ft_child(int *pipe, char **av, char **envp)
 	path = ft_path_cmd(envp);
 	exec = ft_split(av[2], ' ');
 	cmd = find_cmd(path, exec);
-	dup2(pipe[1], 1);
 	dup2(fd, 0);
 	close(pipe[0]);
+	dup2(pipe[1], 1);
+	if (fd == 0)
+		exit(1);
 	ft_execve(exec, cmd, envp);
 }
 
@@ -100,10 +104,6 @@ int	main(int ac, char **av, char **envp)
 	pid_t	id;
 	int		fd[2];
 
-	if (ac > 5)
-		error_exit("Error, too many arguments.\n");
-	if (ac < 5)
-		error_exit("Error, missing arguments.\n");
 	if (ac == 5)
 	{
 		if (pipe(fd) == -1)
@@ -113,7 +113,10 @@ int	main(int ac, char **av, char **envp)
 			error_exit("Error, fork failed.\n");
 		if (id == 0)
 			ft_child(fd, av, envp);
+		waitpid(id, NULL, 0);
 		ft_parent(fd, av, envp);
 	}
+	else
+		error_exit("Error arguments.\n");
 	return (0);
 }
